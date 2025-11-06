@@ -157,11 +157,8 @@ createFrame(['a', 'bb', 'ccc'])
 
 createFrame(['a', 'bb', 'ccc', 'dddd']) */
 
-let regalos = ['a', 'bb', 'ccc', 'dddd']
 
-function crearMarco ( regalos ){
 
-}
 
 
 
@@ -171,7 +168,7 @@ Analisis profe:
     - Crear una funcion llamada dibujarFila(text, maxLength) devolverte la fila correctamente
         dibujarFila('a', 4) => '* a    *'
     - Crear una funcion llamada dibujarFilaBorde(maxLength)
-        dibujarFilaBorde(4) => '******'
+        dibujarFilaBorde(4) => '********'
     - Despues recorrer el array de texto y por cada texto dibujar la fila, luego concatenar todo y sumarle los bordes
 
 RECOMENDACIONES:
@@ -188,3 +185,45 @@ RECOMENDACIONES:
 
 
 
+
+/* let regalos = ['valen', 'guada', 'mati', 'mija'] */
+let regalos = ['a', 'bb', 'ccc', 'dddd']
+
+
+function determinarStringMasLargo (strings){
+    let string_mas_largo = ''
+    for(let string of strings){
+        if(string_mas_largo.length < string.length){
+            string_mas_largo = string
+        }
+    }
+    return string_mas_largo
+}
+
+
+function crearFila (string, ancho_maximo){
+    let cantidad_espacios_vacios = ancho_maximo - string.length
+    return `* ${string + (' '.repeat(cantidad_espacios_vacios))} *`
+}
+
+function crearBorde (ancho_maximo){
+    return '*'.repeat(ancho_maximo + 4)
+}
+
+function crearMarco (strings){
+    const string_mas_largo = determinarStringMasLargo(strings)
+    let ancho_maximo = string_mas_largo.length
+
+    //Creamos el borde superior
+    let resultado = crearBorde(ancho_maximo) + '\n'
+
+    //Crear las filas
+    for(let string of strings){
+        resultado = resultado + crearFila(string, ancho_maximo) + '\n'
+    }
+
+    resultado = resultado + crearBorde(ancho_maximo)
+    return resultado
+}
+
+console.log(crearMarco(regalos))
