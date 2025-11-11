@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import useForm from '../../hooks/useForm'
 
 const LOGIN_FORM_NAME_FIELDS = {
     EMAIL: 'email',
@@ -15,28 +16,15 @@ const LoginForm = () => {
         [LOGIN_FORM_NAME_FIELDS.EMAIL]: '',
         [LOGIN_FORM_NAME_FIELDS.PASSWORD]: ''
     }
-
-    const [form_state, setFormState] = useState(
-        initial_form_state
-    )
-
-    function handleChange (event){
-        const {name, value} = event.target
-        setFormState(
-            (prevState) => {
-                return {...prevState, [name]: value}
-            }
-        )
-    } 
-
-    function handleSubmit (event){
-        //Evitamos que se recarge la pagina (Comportamiento por defecto del form)
-        event.preventDefault()
-        console.log(
-            'Formulario enviado',
-            form_state
-        )
+    function onSubmitLoginForm (form_state){
+        console.log('formulario enviado', form_state)
     }
+
+    const {
+        form_state, 
+        handleChange, 
+        handleSubmit
+    } = useForm(initial_form_state, onSubmitLoginForm)
 
     
 
