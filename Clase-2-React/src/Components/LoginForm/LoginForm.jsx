@@ -21,7 +21,12 @@ const LoginForm = () => {
     )
 
     function handleChange (event){
-        console.log('hola')
+        const {name, value} = event.target
+        setFormState(
+            (prevState) => {
+                return {...prevState, [name]: value}
+            }
+        )
     } 
 
     return (
