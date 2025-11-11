@@ -29,8 +29,19 @@ const LoginForm = () => {
         )
     } 
 
+    function handleSubmit (event){
+        //Evitamos que se recarge la pagina (Comportamiento por defecto del form)
+        event.preventDefault()
+        console.log(
+            'Formulario enviado',
+            form_state
+        )
+    }
+
+    
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="email">Ingresa tu email</label>
                 <br/>
