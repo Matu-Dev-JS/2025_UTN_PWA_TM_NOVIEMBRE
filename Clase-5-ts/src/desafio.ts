@@ -17,7 +17,7 @@ Crear la class Tienda
     -items: ItemTienda[],
     -id
     -buscarItemPorId(id_item_buscado) 
-    -buscar en la lista de items el item buscado y devolvera el mismo, sino devolvera null
+        -buscar en la lista de items el item buscado y devolvera el mismo, sino devolvera null
 
     -eliminarPorId(id_item_buscado): true (si elmina) | false (si no elimina)
         -eliminar el item con el id recibido y devolver un boolean de status
@@ -36,3 +36,4 @@ Crear la class Tienda
         -Crear un ItemTienda a partir de Item
         -pushear a la lista de items
  */
+
