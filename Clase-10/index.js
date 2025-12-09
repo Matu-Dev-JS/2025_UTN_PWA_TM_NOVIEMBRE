@@ -50,3 +50,15 @@ numero_2.txt
 
 Crear una funcion llamada sumarDesdeArchivos que lea el numero_1.txt y el numero_2.txt, sume los numeros leidos y guarde el resultado en resultado.txt
 */
+
+async function sumarDesdeArchivos (){
+    let numero_1 = await filesystem.promises.readFile()
+    let numero_2 = await filesystem.promises.readFile()
+    
+    numero_1 = Number(numero_1)
+    numero_2 = Number(numero_2)
+
+    let suma = numero_1 + numero_2
+    await filesystem.promises.writeFile()
+    console.log("se guardo el resultado con exito")
+}
