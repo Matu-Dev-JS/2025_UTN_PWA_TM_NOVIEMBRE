@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import ENVIRONMENT from "./environment.config"
+import ENVIRONMENT from "./environment.config.js"
 /* CONEXION CON MONGODB */
 
 const connection_string = `${ENVIRONMENT.MONGO_DB_URI}/${ENVIRONMENT.MONGO_DB_NAME}`
