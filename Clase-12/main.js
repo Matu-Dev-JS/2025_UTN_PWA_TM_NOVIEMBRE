@@ -17,3 +17,5 @@ async function crearUsuario (email, password, username){
 //crearUsuario('pepe@gmail.com', 'pepe123', 'pepe')
 
 /* userRepository.crear('pepe2@gmail.com', 'pepe123', 'pepe') */
+
+/* userRepository.desactivarPorId('69416752bc582a16ec2a393f') */
