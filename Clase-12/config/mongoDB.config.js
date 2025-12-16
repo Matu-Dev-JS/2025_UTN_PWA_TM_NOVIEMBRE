@@ -1,7 +1,8 @@
 import mongoose from "mongoose"
+import ENVIRONMENT from "./environment.config"
 /* CONEXION CON MONGODB */
 
-const connection_string = 'mongodb+srv://admin:MmcifRFkLlVxFNx0@cluster0.krxslbl.mongodb.net/UTN_SLACK_TM'
+const connection_string = `${ENVIRONMENT.MONGO_DB_URI}/${ENVIRONMENT.MONGO_DB_NAME}`
 
 export async function connectMongoDB (){
     try{
