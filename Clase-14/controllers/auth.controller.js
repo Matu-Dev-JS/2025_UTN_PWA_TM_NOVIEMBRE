@@ -25,6 +25,10 @@ class AuthController {
             return response.send('Error interno del servidor')
         }
     }
+
+    async login (request, response){
+        const {email, pasword} = request.body
+    }
 }
 
 const authController = new AuthController()
