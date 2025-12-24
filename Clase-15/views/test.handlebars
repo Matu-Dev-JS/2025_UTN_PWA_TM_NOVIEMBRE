@@ -1,0 +1,15 @@
+<h1>Soy la vista de test</h1>
+<h2>{{username}}</h2>
+{{#if isAdmin}}
+    <h2>Administrador</h2>
+    {{else}}
+    <h3>Usuario</h3>
+{{/if}}
+
+
+{{!-- El each en handlebars es una forma de hacer map --}}
+{{#each products}}
+    <h3>{{name}}</h3>
+    <p>{{description}}</p>
+    <span>Precio: ${{price}}</span>
+{{/each}}
