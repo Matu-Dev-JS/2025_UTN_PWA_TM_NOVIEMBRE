@@ -31,9 +31,9 @@ app.listen(
     }
 )
 
-mail_transporter.sendMail({
+/* mail_transporter.sendMail({
     from: ENVIRONMENT.GMAIL_USERNAME,
     to: ENVIRONMENT.GMAIL_USERNAME,
     subject: 'Probando nodemailer',
     html: `<h1>Probando nodemailer</h1>`
-})
+}) */
