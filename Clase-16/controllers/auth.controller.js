@@ -69,6 +69,7 @@ class AuthController {
             id: usuario_encontrado.id
         }
 
+        
         const auth_token = jwt.sign(datos_del_token, ENVIRONMENT.JWT_SECRET_KEY)
         return response.json({
             message: 'Inicio de sesion exitoso',
