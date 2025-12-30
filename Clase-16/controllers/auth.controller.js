@@ -64,7 +64,7 @@ class AuthController {
             )
         }
 
-        if(!(await bcrypt.compare(password, usuario_encontrado.password))){
+        if( !( await bcrypt.compare(password, usuario_encontrado.password) ) ){
             /* Respondemos igual a que si no existiese para mayor seguridad */
             return response.json(
                 {
