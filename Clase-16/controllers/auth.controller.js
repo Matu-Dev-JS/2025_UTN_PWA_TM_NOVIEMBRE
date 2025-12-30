@@ -45,17 +45,29 @@ class AuthController {
             return response.json({
                 ok: false,
                 status: 400,
-                message: 'El email no es valido',
+                message: 'El email no es valido', 
                 data: null
             })
         }
 
         const usuario_encontrado = await userRepository.buscarUnoPorEmail(email)
 
-        if(usuario_encontrado.password !== password){
-            return response.send(
+        if(!usuario_encontrado){
+            return response.json(
                 {
-                    message: 'Contraseña incorrecta', 
+                    message: 'Credenciales invalidas', 
+                    status: 401, 
+                    ok: false,
+                    data: null
+                }
+            )
+        }
+
+        if(usuario_encontrado.password !== password){
+            /* Respondemos igual a que si no existiese para mayor seguridad */
+            return response.json(
+                {
+                    message: 'Credenciales invalidas',
                     status: 401, 
                     ok: false,
                     data: null
@@ -69,7 +81,7 @@ class AuthController {
             id: usuario_encontrado.id
         }
 
-        
+
         const auth_token = jwt.sign(datos_del_token, ENVIRONMENT.JWT_SECRET_KEY)
         return response.json({
             message: 'Inicio de sesion exitoso',
