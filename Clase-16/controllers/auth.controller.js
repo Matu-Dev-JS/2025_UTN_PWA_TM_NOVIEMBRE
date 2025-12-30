@@ -1,6 +1,7 @@
 import ENVIRONMENT from "../config/environment.config.js"
 import userRepository from "../repository/user.repository.js"
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 class AuthController {
     async register (request, response) {
@@ -16,8 +17,8 @@ class AuthController {
             if(user){
                 return response.send(`Usuario con email ${email} ya registrado`)
             }
-    
-            await userRepository.crear(email, password, username)
+            let hashed_password = await bcrypt.hash(password, 10)
+            await userRepository.crear(email, hashed_password, username)
     
             return response.send('Usuario creado exitosamente')
         }
@@ -63,7 +64,7 @@ class AuthController {
             )
         }
 
-        if(usuario_encontrado.password !== password){
+        if(!(await bcrypt.compare(password, usuario_encontrado.password))){
             /* Respondemos igual a que si no existiese para mayor seguridad */
             return response.json(
                 {
