@@ -5,6 +5,8 @@ import userRepository from "./repository/user.repository.js"
 import express from 'express'
 import testRouter from "./routes/test.router.js"
 import authRouter from "./routes/auth.router.js"
+import mail_transporter from "./config/mail.config.js"
+import ENVIRONMENT from "./config/environment.config.js"
 
 
 connectMongoDB()
@@ -28,3 +30,10 @@ app.listen(
         console.log('Nuestra app se escucha en el puerto 8080')
     }
 )
+
+mail_transporter.sendMail({
+    from: ENVIRONMENT.GMAIL_USERNAME,
+    to: ENVIRONMENT.GMAIL_USERNAME,
+    subject: 'Probando nodemailer',
+    html: `<h1>Probando nodemailer</h1>`
+})
