@@ -7,6 +7,7 @@ import testRouter from "./routes/test.router.js"
 import authRouter from "./routes/auth.router.js"
 import mail_transporter from "./config/mail.config.js"
 import ENVIRONMENT from "./config/environment.config.js"
+import randomMiddleware from "./middlewares/random.middleware.js"
 
 
 connectMongoDB()
@@ -22,6 +23,19 @@ app.use(express.json())
 app.use('/api/test', testRouter)
 app.use("/api/auth", authRouter)
 
+
+app.get(
+    '/api/suerte/saber', 
+    randomMiddleware,
+    (request, response) =>{
+        if(request.suerte){
+            response.send('Tenes suerte')
+        }
+        else{
+            response.send('No tenes suerte')
+        }
+    }
+)
 
 
 app.listen(
