@@ -1,11 +1,18 @@
 import React from 'react'
+import { Route, Routes } from 'react-router'
+import LoginScreen from './Screens/LoginScreen/LoginScreen'
+import RegisterScreen from './Screens/RegisterScreen/RegisterScreen'
 
 function App() {
 
 
   return (
     <>
-      <h1>Hola</h1>
+      <Routes>
+        <Route path='/' element={<LoginScreen />} />
+        <Route  path='/register' element={<RegisterScreen />} />
+        <Route  path='/login' element={<LoginScreen />} />
+      </Routes>
     </>
   )
 }
