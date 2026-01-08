@@ -3,36 +3,22 @@ import userRepository from "../repository/user.repository.js"
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import mail_transporter from "../config/mail.config.js"
+import ServerError from "../helpers/error.helpers.js"
 
 class AuthController {
-    async register (request, response) {
+    async register(request, response) {
 
-        try{     
+        try {
 
-            const {email, password, username} = request.body
+            const { email, password, username } = request.body
 
-            if(!email || !password || !username){
-                return response.json(
-                    {
-                        message: 'Error: Nombre, email o usuario invalido',
-                        status: 400,
-                        data: null,
-                        ok: false
-                    }
-                )
+            if (!email || !password || !username) {
+                throw new ServerError('Debes enviar todos los datos', 400)
             }
 
             const user = await userRepository.buscarUnoPorEmail(email)
-            if(user){
-                return response.json(
-                    {
-                        ok: false,
-                        message: 'El email ya esta registrado',
-                        status: 400,
-                        data: null
-                    }
-                )
-                
+            if (user) {
+                throw new ServerError('El email ya esta registrado', 400)
             }
             let hashed_password = await bcrypt.hash(password, 10)
             await userRepository.crear(email, hashed_password, username)
@@ -64,142 +50,121 @@ class AuthController {
                     `
                 }
             )
-    
+
             return response.json({
-                message:'Usuario creado exitosamente', 
-                status: 201, 
-                ok: true, 
+                message: 'Usuario creado exitosamente',
+                status: 201,
+                ok: true,
                 data: null
             })
         }
-        catch(error){
-            console.error('Error al crear usuario:', error)
-
-            return response.send({
-                message:'Error interno del servidor', 
-                status: 500, 
-                ok: false, 
-                data: null
-            })
-        }
-    }
-
-    async login (request, response){
-        const {email, password} = request.body
-        /* 
-        Aplicar validaciones sobre el email y la password
-        */
-        if(!email){
-            return response.json({
-                ok: false,
-                message: 'Debes enviar un email',
-                status: 400,
-                data: null
-            })
-        }
-        else if(!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email))){
-            return response.json({
-                ok: false,
-                status: 400,
-                message: 'El email no es valido', 
-                data: null
-            })
-        }
-
-        const usuario_encontrado = await userRepository.buscarUnoPorEmail(email)
-
-        if(!usuario_encontrado){
-            return response.json(
-                {
-                    message: 'Credenciales invalidas', 
-                    status: 401, 
+        catch (error) {
+            /* Si tiene status decimos que es un error controlado (osea es esperable) */
+            if (error.status) {
+                return response.json({
+                    status: error.status,
                     ok: false,
+                    message: error.message,
                     data: null
-                }
-            )
-        }
-
-        if( !( await bcrypt.compare(password, usuario_encontrado.password) ) ){
-            /* Respondemos igual a que si no existiese para mayor seguridad */
-            return response.json(
-                {
-                    message: 'Credenciales invalidas',
-                    status: 401, 
-                    ok: false,
-                    data: null
-                }
-            )
-        }
-
-        if(!usuario_encontrado.email_verified){
-            return response.json(
-                {
-                    status: 401,
-                    message: 'Usuario con email no verificado',
-                    ok: false,
-                    data: null
-                }
-            )
-        }
-
-        const datos_del_token = {
-            username: usuario_encontrado.username,
-            email: usuario_encontrado.email,
-            id: usuario_encontrado.id
-        }
-
-
-        const auth_token = jwt.sign(datos_del_token, ENVIRONMENT.JWT_SECRET_KEY)
-        return response.json({
-            message: 'Inicio de sesion exitoso',
-            ok: true,
-            status: 200,
-            data: {
-                auth_token: auth_token
+                })
             }
-        })
+
+            return response.json({
+                ok: false,
+                status: 500,
+                message: "Error interno del servidor",
+                data: null
+            })
+        }
     }
 
-    async verifyEmail (request, response){
-        try{
-            const {verification_email_token} = request.query
+    async login(request, response) {
+        try {
+            const { email, password } = request.body
+            /* 
+            Aplicar validaciones sobre el email y la password
+            */
+            if (!email) {
+                throw new ServerError('Debes enviar un email', 400)
+            }
+            else if (!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email))) {
+                throw new ServerError('El email no es valido', 400)
+            }
 
-            if(!verification_email_token){
-                return response.json(
-                    {
-                        status: 400,
-                        message: 'Debes enviar el token de verificacion',
-                        ok: false,
-                        data: null
-                    }
-                )
+            const usuario_encontrado = await userRepository.buscarUnoPorEmail(email)
+
+            if (!usuario_encontrado) {
+                throw new ServerError('Credenciales invalidas', 401)
+            }
+
+            if (!(await bcrypt.compare(password, usuario_encontrado.password))) {
+                /* Respondemos igual a que si no existiese para mayor seguridad */
+                throw new ServerError('Credenciales invalidas', 401)
+            }
+
+            if (!usuario_encontrado.email_verified) {
+                throw new ServerError('Usuario con email no verificado', 401)
+            }
+
+            const datos_del_token = {
+                username: usuario_encontrado.username,
+                email: usuario_encontrado.email,
+                id: usuario_encontrado.id
+            }
+
+
+            const auth_token = jwt.sign(datos_del_token, ENVIRONMENT.JWT_SECRET_KEY)
+            return response.json({
+                message: 'Inicio de sesion exitoso',
+                ok: true,
+                status: 200,
+                data: {
+                    auth_token: auth_token
+                }
+            })
+        }
+        catch (error) {
+            /* Si tiene status decimos que es un error controlado (osea es esperable) */
+            if (error.status) {
+                return response.json({
+                    status: error.status,
+                    ok: false,
+                    message: error.message,
+                    data: null
+                })
+            }
+
+            return response.json({
+                ok: false,
+                status: 500,
+                message: "Error interno del servidor",
+                data: null
+            })
+        }
+
+    }
+
+    async verifyEmail(request, response) {
+        try {
+            const { verification_email_token } = request.query
+
+            if (!verification_email_token) {
+                throw new ServerError('No se envio el token de verificacion', 400)
             }
 
             const { email } = jwt.verify(
-                verification_email_token, 
+                verification_email_token,
                 ENVIRONMENT.JWT_SECRET_KEY
             )
 
             const user_found = await userRepository.buscarUnoPorEmail(email)
 
-            if(!user_found){
-                return response.json(
-                    {
-                        status: 404,
-                        message: 'No existe usuario con ese mail, prueba volver a registrarte',
-                        ok: false,
-                        data: null
-                    }
-                )
+            if (!user_found) {
+                throw new ServerError('No existe usuario con ese mail', 404)
             }
 
-            if(user_found.email_verified){
-                return response.json({
-                    status: 400,
-                    message: 'Usuario ya verificado',
-                    ok: false,
-                    data: null
-                })
+            if (user_found.email_verified) {
+                throw new ServerError('Usuario ya verificado', 400)
             }
 
             await userRepository.actualizarPorId(
@@ -223,22 +188,32 @@ class AuthController {
             ) 
             */
         }
-        catch(error){
-            if(error instanceof jwt.JsonWebTokenError){
+        catch (error) {
+            if (error instanceof jwt.JsonWebTokenError) {
                 return response.json(
                     {
-                        status: 400,
-                        message: 'Token de verificacion invalido',
                         ok: false,
+                        status: 401,
+                        message: "No autorizado",
                         data: null
                     }
                 )
             }
 
-            return response.send({
-                message:'Error interno del servidor', 
-                status: 500, 
-                ok: false, 
+            /* Si tiene status decimos que es un error controlado (osea es esperable) */
+            if (error.status) {
+                return response.json({
+                    status: error.status,
+                    ok: false,
+                    message: error.message,
+                    data: null
+                })
+            }
+
+            return response.json({
+                ok: false,
+                status: 500,
+                message: "Error interno del servidor",
                 data: null
             })
         }
