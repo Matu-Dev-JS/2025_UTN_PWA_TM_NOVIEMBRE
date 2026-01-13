@@ -46,7 +46,7 @@ export async function register(username, password, email) {
     //Como el servidor envia JSON debemos tomar la response como json (.json())
     const response = await response_http.json()
     if(!response.ok){
-        throw new ServerError('Hubo un fallo en el registro: ' + response.message, response.status)
+        throw new ServerError( response.message, response.status)
     }
     return response
 }

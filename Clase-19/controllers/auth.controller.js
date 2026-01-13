@@ -173,20 +173,21 @@ class AuthController {
                     email_verified: true
                 }
             )
-            return response.json(
+           /*  return response.json(
                 {
                     ok: true,
                     status: 200,
                     message: "usuario verificado",
                     data: null
                 }
-            )
+            ) */
             /* 
-            Redireccionar al frontend
-            return response.redirect(
-                'http://localhost:3000'
-            ) 
+            Redireccionar al frontend 
             */
+            return response.redirect(
+                ENVIRONMENT.URL_FRONTEND + '/login?from=email-validated' //La querystring from=email-validated es opcional
+            ) 
+           
         }
         catch (error) {
             if (error instanceof jwt.JsonWebTokenError) {
