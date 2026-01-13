@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import useForm from '../../hooks/useForm'
+import { register } from '../../services/authService'
 
 const RegisterScreen = () => {
     /* Que campos existe en mi formulario y que valor tienen */
@@ -10,8 +11,10 @@ const RegisterScreen = () => {
         email: ''
     }
 
-    function enviarRegistro (form_state){
+    async function enviarRegistro (form_state){
         console.log({form_state})
+        const response = await register(form_state.username, form_state.password, form_state.email)
+        console.log(response)
     }
 
     const {
