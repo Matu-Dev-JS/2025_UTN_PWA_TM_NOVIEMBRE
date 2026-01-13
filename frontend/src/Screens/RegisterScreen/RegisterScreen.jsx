@@ -22,12 +22,6 @@ const RegisterScreen = () => {
         )
     }
 
-    console.log({
-        loading,
-        response,
-        error
-    })
-
     const {
         form_state,
         onChangeFieldValue,

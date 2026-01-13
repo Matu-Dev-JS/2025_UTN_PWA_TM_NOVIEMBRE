@@ -15,6 +15,9 @@ connectMongoDB()
 //Crear un servidor web (Express app)
 const app = express()
 
+/* 
+Esto permite que otras direcciones distintas a la nuesta puedan consultar nuestro servidor
+*/
 app.use(cors())
 
 //Habilita a mi servidor a recibir json por body
