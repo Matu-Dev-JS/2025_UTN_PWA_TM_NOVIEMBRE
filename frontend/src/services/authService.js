@@ -20,8 +20,27 @@ fecth recibe 2 paremetros
 
 const URL_API = 'http://localhost:8080'
 
-function login(username, password) {
-
+export async function login(email, password) {
+    const response_http = await fetch(
+        URL_API + '/api/auth/login',
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    password: password,
+                    email: email
+                }
+            )
+        }
+    )
+    const response = await response_http.json()
+    if (!response.ok) {
+        throw new ServerError(response.message, response.status)
+    }
+    return response
 }
 
 export async function register(username, password, email) {
@@ -45,8 +64,8 @@ export async function register(username, password, email) {
     //Transformar la respuesta HTTP para obtener los datos que nos envio por body el servidor
     //Como el servidor envia JSON debemos tomar la response como json (.json())
     const response = await response_http.json()
-    if(!response.ok){
-        throw new ServerError( response.message, response.status)
+    if (!response.ok) {
+        throw new ServerError(response.message, response.status)
     }
     return response
 }
