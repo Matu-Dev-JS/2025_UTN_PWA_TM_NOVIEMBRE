@@ -1,16 +1,32 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 
-const AuthContext = createContext()
+export const AuthContext = createContext()
 
+export const AUTH_TOKEN_KEY = 'auth_token'
 
 function AuthContextProvider ({children}){
-    const providerValues = {}
     const [isLogged, setIsLogged] = useState(false)
     const [session, setSession] = useState({})
-    
+
+
+    function saveSession (auth_token){
+        localStorage.setItem(AUTH_TOKEN_KEY, auth_token)
+        setIsLogged(true)
+        const session_decoded = jwtDecode(auth_token)
+        setSession(session_decoded)
+    }
+
+    const providerValues = {
+        saveSession,
+        session,
+        isLogged
+    }
     return(
         <AuthContext.Provider value={providerValues}>
             {children}
         </AuthContext.Provider>
     )
 }
+
+export default AuthContextProvider

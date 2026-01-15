@@ -2,10 +2,14 @@ import { useNavigate } from "react-router"
 import useRequest from "./useRequest"
 import { login } from "../services/authService"
 import useForm from "./useForm"
-import { useEffect } from "react"
+import { useContext, useEffect } from "react"
+import { AUTH_TOKEN_KEY, AuthContext } from "../context/AuthContext"
 
 function useLogin() {
     const navigate = useNavigate()
+    const {saveSession, isLogged, session} = useContext(AuthContext)
+
+    console.log({isLogged, session})
     const initialLoginForm = {
         email: '',
         password: ''
@@ -32,7 +36,7 @@ function useLogin() {
     useEffect(
         () => {
             if (response && response.ok) {
-                localStorage.setItem('auth_token', response.data.auth_token)
+                saveSession(response.data.auth_token)
                 navigate('/home')
             }
         },
